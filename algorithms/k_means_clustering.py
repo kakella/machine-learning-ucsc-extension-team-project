@@ -3,9 +3,9 @@ import numpy as np
 
 class KMeansClustering:
 
-    def __init__(self):
-        self.stop_threshold = 0.1
-        self.n_iterations = 10000
+    def __init__(self, stop_threshold=None, n_iterations=None):
+        self.stop_threshold = stop_threshold or 0.1
+        self.n_iterations = n_iterations or 10000
         self.classifier_means = None
 
     @staticmethod
