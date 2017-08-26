@@ -17,19 +17,11 @@ class KMeansClustering:
 
     @staticmethod
     def per_mean_iterate(nd_data, v_mean):
-        v_errors = []
-        for feature in nd_data:
-            mean_squared_error = sum((feature - v_mean) ** 2)
-            v_errors.append(mean_squared_error)
-        return v_errors
+        return [sum((feature - v_mean) ** 2) for feature in nd_data]
 
     @staticmethod
     def calculate_errors(nd_data, nd_means):
-        nd_errors = []
-        for v_mean in nd_means:
-            v_errors = KMeansClustering.per_mean_iterate(nd_data, v_mean)
-            nd_errors.append(v_errors)
-        return nd_errors
+        return [KMeansClustering.per_mean_iterate(nd_data, v_mean) for v_mean in nd_means]
 
     @staticmethod
     def find_closest_mean(nd_errors):
@@ -42,7 +34,7 @@ class KMeansClustering:
         l1 = len(a1)
         a2 = arr2.flatten()
         l2 = len(a2)
-        m = l1 / l2
+        m = int(l1 / l2)
         a3 = np.repeat(a2, m)
 
         for i in range(len(a1)):
