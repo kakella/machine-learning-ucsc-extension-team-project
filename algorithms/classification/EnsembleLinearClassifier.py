@@ -3,6 +3,7 @@ import random
 import algorithms.classification.MeanSquareErrorMinimizerLinearClassifier as ln
 import algorithms.util.misc as ut
 
+
 class EnsembleLinearClassifier:
 
     def __init__(self, init_value=None):
