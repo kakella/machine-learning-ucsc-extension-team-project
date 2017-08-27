@@ -44,11 +44,16 @@ def run_EnsembleClassifier():
         print('query %s classified as "%s"\n' % (v_query, classification_output))
 
 
-if __name__ == "__main__":
+def get_data():
     nd_data = (np.random.random_sample(1000) + np.random.random_sample(1000)).reshape(500, 2)
     target = [rd.randint(0, 2) for _ in range(500)]
     v_query = np.random.random_sample(2)
-    print('random data to classify:\n', nd_data)
+    return nd_data, target, v_query
+
+
+if __name__ == "__main__":
+    nd_data, target, v_query = get_data()
+    print('data to classify:\n', nd_data)
     print('----------------------------------------------------------------\n\n')
     run_KMeansClusteringClassifier()
     run_LinearClassifier()
