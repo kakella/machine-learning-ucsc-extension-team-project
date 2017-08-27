@@ -28,7 +28,6 @@ class KMeansClusteringClassifier:
     def __find_closest_mean(nd_errors):
         return np.argmin(nd_errors, axis=0)
 
-
     @staticmethod
     def __recalculate_means(nd_data, nd_closest_means, k):
         t_shape = nd_data.shape
