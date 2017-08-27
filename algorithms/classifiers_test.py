@@ -1,9 +1,10 @@
 import numpy as np
 import random as rd
 
-import algorithms.clustering.KMeansClusteringClassifier as kMeans
-import algorithms.classification.EnsembleLinearClassifier as ensemble
 import algorithms.classification.MeanSquareErrorMinimizerLinearClassifier as linear
+import algorithms.classification.EnsembleLinearClassifier as ensemble
+
+import algorithms.clustering.KMeansClusteringClassifier as kMeans
 
 
 def run_KMeansClusteringClassifier():
