@@ -45,10 +45,10 @@ def run_EnsembleClassifier():
 
 
 def get_data():
-    nd_data = (np.random.random_sample(1000) + np.random.random_sample(1000)).reshape(500, 2)
-    target = [rd.randint(0, 2) for _ in range(500)]
-    v_query = np.random.random_sample(2)
-    return nd_data, target, v_query
+    X = (np.random.random_sample(1000) + np.random.random_sample(1000)).reshape(500, 2)
+    T = [rd.randint(0, 2) for _ in range(500)]
+    Q = np.random.random_sample(2)
+    return X, T, Q
 
 
 if __name__ == "__main__":
