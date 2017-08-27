@@ -16,3 +16,4 @@ def safe_divide(arr1, arr2):
         else:
             out.append(a1[i] / a3[i])
     return np.array(out).reshape(arr1.shape)
+
