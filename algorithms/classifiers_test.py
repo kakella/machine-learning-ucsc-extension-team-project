@@ -5,6 +5,9 @@ import algorithms.classification.MeanSquareErrorMinimizerLinearClassifier as lin
 import algorithms.classification.EnsembleLinearClassifier as ensemble
 
 import algorithms.clustering.KMeansClusteringClassifier as kMeans
+import algorithms.clustering.EM as expMax
+
+import algorithms.util.RunAsBinaryClassifier as run
 
 
 def run_KMeansClusteringClassifier():
@@ -28,7 +31,7 @@ def run_LinearClassifier():
     print('Mean Square Error Minimizer - Linear Classifier')
     print('****************************************************************')
     classifier = linear.MeanSquareErrorMinimizerLinearClassifier()
-    classifier.train(nd_data, target)
+    classifier.train(nd_data, v_target)
     classification_output = classifier.classify(v_query)
     print('query %s classified as "%s"\n' % (v_query, classification_output))
 
@@ -37,12 +40,22 @@ def run_EnsembleClassifier():
     print('****************************************************************')
     print('Ensemble - Linear Classifier')
     print('****************************************************************')
-    for k in range(1, 10):
+    for k in range(100, 101):
         print('num of linear classifiers:', k)
-        classifier = ensemble.EnsembleLinearClassifier()
-        classifier.train(nd_data, target, k)
-        classification_output = classifier.classify(v_query)
+        runner = run.RunAsBinaryClassifier()
+        classification_output = runner.runClassifier(ensemble.EnsembleLinearClassifier, nd_data, v_target, v_query, [], k)
         print('query %s classified as "%s"\n' % (v_query, classification_output))
+
+
+def run_ExpectationMaximizationClassifier():
+    print('****************************************************************')
+    print('Expectation Maximization Clustering Classifier')
+    print('****************************************************************')
+    for k in range(1, 10):
+        classifier = expMax.EM(nd_data, k)
+        classifier.Run()
+        # classification_output = classifier.classify(v_query)
+        # print('query %s classified as "%s"\n' % (v_query, classification_output))
 
 
 def get_data():
@@ -53,9 +66,10 @@ def get_data():
 
 
 if __name__ == "__main__":
-    nd_data, target, v_query = get_data()
+    nd_data, v_target, v_query = get_data()
     print('data to classify:\n', nd_data)
     print('----------------------------------------------------------------\n\n')
-    run_KMeansClusteringClassifier()
-    run_LinearClassifier()
+    # run_KMeansClusteringClassifier()
+    # run_LinearClassifier()
     run_EnsembleClassifier()
+    # run_ExpectationMaximizationClassifier()
