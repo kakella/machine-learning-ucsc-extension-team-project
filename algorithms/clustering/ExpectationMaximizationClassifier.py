@@ -10,7 +10,7 @@ import scipy.linalg as linalg
 import math
 
 
-class EM:
+class ExpectationMaximizationClassifier:
     """Expectation-Maximization algorithm."""
 
     def __init__(self, X, C=2):

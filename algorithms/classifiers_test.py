@@ -5,7 +5,7 @@ import algorithms.classification.MeanSquareErrorMinimizerLinearClassifier as lin
 import algorithms.classification.EnsembleLinearClassifier as ensemble
 
 import algorithms.clustering.KMeansClusteringClassifier as kMeans
-import algorithms.clustering.EM as expMax
+import algorithms.clustering.ExpectationMaximizationClassifier as expMax
 
 import algorithms.util.RunAsBinaryClassifier as run
 
@@ -52,7 +52,7 @@ def run_ExpectationMaximizationClassifier():
     print('Expectation Maximization Clustering Classifier')
     print('****************************************************************')
     for k in range(1, 10):
-        classifier = expMax.EM(nd_data, k)
+        classifier = expMax.ExpectationMaximizationClassifier(nd_data, k)
         classifier.Run()
         # classification_output = classifier.classify(v_query)
         # print('query %s classified as "%s"\n' % (v_query, classification_output))

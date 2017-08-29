@@ -6,7 +6,7 @@ import youtube_dl
 
 import algorithms.classification.EnsembleLinearClassifier as Ensemble
 import algorithms.classification.MeanSquareErrorMinimizerLinearClassifier as Linear
-import algorithms.clustering.EM as EM
+import algorithms.clustering.ExpectationMaximizationClassifier as EM
 import algorithms.clustering.KMeansClusteringClassifier as KMeans
 from demo import features
 
@@ -81,7 +81,7 @@ def main():
 
     ensembleClassifier = Ensemble.EnsembleLinearClassifier
     linearClassifier   = Linear.MeanSquareErrorMinimizerLinearClassifier
-    emClassifier       = EM.EM
+    emClassifier       = EM.ExpectationMaximizationClassifier
     KMeansClassifier   = KMeans.KMeansClusteringClassifier
 
 

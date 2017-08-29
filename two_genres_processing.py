@@ -22,7 +22,7 @@ import scipy.linalg as linalg
 import argparse
 
 import FmaData
-import algorithms.clustering.EM
+import algorithms.clustering.ExpectationMaximizationClassifier
 
 script_name = "main"
 
@@ -92,7 +92,7 @@ def main():
     #   y is Nx1 genre label array
     ############################################################################################
     if args.algorithm == "EM":
-        em = algorithms.clustering.EM.EM(X, 2)
+        em = algorithms.clustering.ExpectationMaximizationClassifier.ExpectationMaximizationClassifier(X, 2)
         em.Run(iterations=10000, tolerance=10**-3, print_progress=True, plot=args.plot)
 
     ### ADD Additional Algorithms here ###
