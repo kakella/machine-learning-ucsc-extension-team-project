@@ -23,7 +23,7 @@ class EM:
 
         self.a = np.zeros(self.C)                       # component weight
         self.u = np.zeros((self.C,self.d))              # mean
-        self.S = np.zeros((self.d,self.d,self.d))       # covariance
+        self.S = np.zeros((self.C,self.d,self.d))       # covariance
         self.P = np.zeros((self.N,self.C))              # posterior probabilities
         
         for k in range(self.C):
