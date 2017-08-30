@@ -29,4 +29,4 @@ class PrincipalComponentAnalysis:
         num_of_pcs = PrincipalComponentAnalysis.__find_optimal_principals(eigenvalues, threshold)
         Vpc = V[:num_of_pcs]
         P = np.dot(Z, Vpc.T)
-        return P
+        return P, num_of_pcs
