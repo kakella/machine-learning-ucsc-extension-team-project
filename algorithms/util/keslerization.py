@@ -19,9 +19,20 @@ def keslerize_column(column_data, negative_value=-1):
 
 
 def de_keslerize_columns(keslerized_output_data, unique_values_sorted=None):
-    indexed_list = [d.tolist().index(max(d)) for d in keslerized_output_data]
-    if unique_values_sorted is None:
-        return np.array(indexed_list)
-    else:
-        return np.array([unique_values_sorted[d] for d in indexed_list])
+    print('dekeslerization', keslerized_output_data)
+
+    return_value = []
+
+    for d in keslerized_output_data:
+        index = d.tolist().index(max(d))
+        count_positive_values = sum(x > 0 for x in d)
+        if count_positive_values == 0 or count_positive_values > 1:
+            return_value.append('INDETERMINATE')
+        else:
+            if unique_values_sorted is None:
+                return_value.append(index)
+            else:
+                return_value.append(unique_values_sorted[index])
+
+    return return_value
 
