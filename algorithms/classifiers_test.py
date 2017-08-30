@@ -9,6 +9,9 @@ import algorithms.clustering.ExpectationMaximizationClassifier as expMax
 
 import algorithms.util.RunAsBinaryClassifier as run
 
+# import fma.FmaDataLoader as fma
+import fma.excel_operations as eo
+
 
 def run_KMeansClusteringClassifier():
     print('****************************************************************')
@@ -43,7 +46,8 @@ def run_EnsembleClassifier():
     for k in range(100, 101):
         print('num of linear classifiers:', k)
         runner = run.RunAsBinaryClassifier()
-        classification_output = runner.runClassifier(ensemble.EnsembleLinearClassifier, nd_data, v_target, v_query, [], k)
+        classification_output = runner.runClassifier(ensemble.EnsembleLinearClassifier, nd_data, v_target, v_query, [],
+                                                     k)
         print('query %s classified as "%s"\n' % (v_query, classification_output))
 
 
@@ -58,16 +62,49 @@ def run_ExpectationMaximizationClassifier():
         # print('query %s classified as "%s"\n' % (v_query, classification_output))
 
 
-def get_data():
-    X = (np.random.random_sample(1000) + np.random.random_sample(1000)).reshape(500, 2)
+def get_random_data():
+    X = (np.random.random_sample(10000) + np.random.random_sample(10000)).reshape(500, 20)
     T = [rd.randint(0, 2) for _ in range(500)]
-    Q = np.random.random_sample(2)
+    Q = np.random.random_sample(20)
     return X, T, Q
 
 
+def get_audio_data(feature):
+    if feature == 'mfcc':
+        inputExcelFile = r"../fma/data/mfcc_pca_dataset.xlsx"
+        data = eo.readExcel(inputExcelFile)
+    elif feature == 'tonnetz':
+        inputExcelFile = r"../fma/data/tonnetz_pca_dataset.xlsx"
+        data = eo.readExcel(inputExcelFile)
+    else:
+        return None, None
+
+    inputExcelFile = r"../fma/data/small_target_dataset.xlsx"
+    target = eo.readExcel(inputExcelFile)
+
+    ###########################################################################
+    # Below code only needs to be used once to create small_target_dataset.xlsx
+    ###########################################################################
+    # fmaObj = fma.FmaDataLoader('../fma/data')
+    # _, target = fmaObj.load_specific_data(fmaObj.SUBSETS[0], feature)
+    # outputExcelFile = r"../fma/data/small_target_dataset.xlsx"
+    # eo.writeExcelData(data=[target],
+    #                   excelFile=outputExcelFile,
+    #                   sheetName='Sheet1',
+    #                   startRow=2,
+    #                   startCol=1)
+
+    return data, target
+
+
 if __name__ == "__main__":
-    nd_data, v_target, v_query = get_data()
-    print('data to classify:\n', nd_data)
+    # nd_data, v_target, v_query = get_random_data()
+    nd_data, v_target = get_audio_data('mfcc')
+    print('data to classify:\n', nd_data.shape)
+    print(nd_data)
+    print('----------------------------------------------------------------\n\n')
+    print('targets:\n', v_target.shape)
+    print(v_target)
     print('----------------------------------------------------------------\n\n')
     # run_KMeansClusteringClassifier()
     # run_LinearClassifier()

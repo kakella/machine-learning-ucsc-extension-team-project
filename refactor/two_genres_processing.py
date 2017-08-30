@@ -22,6 +22,7 @@ import scipy.linalg as linalg
 import argparse
 
 import FmaData
+import Plotter
 import algorithms.clustering.ExpectationMaximizationClassifier
 
 script_name = "main"
@@ -83,8 +84,7 @@ def main():
     # Plot all points
     ############################################################################################
     if args.plot:
-        plt.scatter(X[:,0], X[:,1], c=(y==args.genre1), cmap='RdBu', alpha=0.5)
-        plt.ion()           # Turn on interactive plot
+        Plotter.Plotter.PlotData(X, y)
 
     ############################################################################################
     # Run algorithm on X and y
