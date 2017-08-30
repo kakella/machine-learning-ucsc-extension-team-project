@@ -10,7 +10,7 @@ Team members:
 * Ksheerasagar Akella
 
 
-- PCA cmd:
+#### PCA cmd:
 python3.5 pca.py --load --feature all --size small --genre1 Instrumental --genre2 Rock --level1 all --level2 mean --plot --dumpfile test.csv
 
 --genre1/genre2 = all or in [Hip-Hop, Pop, Folk, Experimental, Rock, International, Electronic, Instrumental]
