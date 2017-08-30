@@ -40,4 +40,3 @@ class Plotter:
     def PlotPoint(cls, x, y, c):
         """No need to use this function, just call plt.scatter directly"""
         plt.scatter(x, y, marker='o', color=c)
-    
