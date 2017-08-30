@@ -46,6 +46,7 @@ class FMA:
 
         np.testing.assert_array_equal(self.features.index, self.tracks.index)
         assert self.echonest.index.isin(self.tracks.index).all()
+        return self.tracks, self.genres, self.features, self.echonest
 
     def RunExampleGraph(self):
         """Example code that uses PCA on mfcc features of two top level genres and graphs it."""
