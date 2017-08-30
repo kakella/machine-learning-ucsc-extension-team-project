@@ -1,4 +1,4 @@
-import utils
+import fma.utils as utils
 
 
 class FmaDataLoader:
