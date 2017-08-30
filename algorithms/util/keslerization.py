@@ -19,8 +19,6 @@ def keslerize_column(column_data, negative_value=-1):
 
 
 def de_keslerize_columns(keslerized_output_data, unique_values_sorted=None):
-    print('dekeslerization', keslerized_output_data)
-
     return_value = []
 
     for d in keslerized_output_data:
