@@ -21,13 +21,13 @@ class EnsembleLinearClassifier:
 
     @staticmethod
     def __generate_augmented_features(nd_data, init_value):
-        return np.column_stack(([init_value]*nd_data.shape[0], nd_data))
+        return np.array(np.column_stack(([init_value]*nd_data.shape[0], nd_data)), dtype=float)
 
     @staticmethod
     def __generate_meta_features(nd_data, n_classifiers, init_value):
         W = EnsembleLinearClassifier.__generate_linear_classifiers(nd_data, n_classifiers)
         Xa = EnsembleLinearClassifier.__generate_augmented_features(nd_data, init_value)
-        return W, np.tanh(np.dot(Xa, W.T))
+        return np.array(W, dtype=float), np.tanh(np.array(np.dot(Xa, W.T), dtype=float))
 
     def train(self, nd_data, T, n_classifiers):
         self.W, X = EnsembleLinearClassifier.__generate_meta_features(nd_data, n_classifiers, self.init_value)

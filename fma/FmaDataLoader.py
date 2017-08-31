@@ -1,4 +1,7 @@
+import numpy as np
 import fma.utils as utils
+import pandas as pd
+import algorithms.util.PrincipalComponentAnalysis as pca
 
 
 class FmaDataLoader:
@@ -61,9 +64,20 @@ class FmaDataLoader:
 
 def main():
     fma = FmaDataLoader('./data')
-    X, y = fma.load_specific_data(f_size=fma.SUBSETS[0], f_feature=fma.FEATURES[0], f_attributes=fma.ATTRIBUTES[0])
-    print(X)
-    print(y)
+    # X, y = fma.load_specific_data(f_size=fma.SUBSETS[0], f_feature=fma.FEATURES[0], f_attributes=fma.ATTRIBUTES[0])
+    X_kurtosis, _ = fma.load_specific_data(f_size=fma.SUBSETS[0], f_feature='mfcc', f_attributes='kurtosis')
+    X_mean, _ = fma.load_specific_data(f_size=fma.SUBSETS[0], f_feature='mfcc', f_attributes='mean')
+    X_median, _ = fma.load_specific_data(f_size=fma.SUBSETS[0], f_feature='mfcc', f_attributes='median')
+    X_std, y = fma.load_specific_data(f_size=fma.SUBSETS[0], f_feature='mfcc', f_attributes='std')
+
+    X = np.column_stack((X_kurtosis, X_mean, X_median, X_std, y))
+    print(X.shape, X[:, :-1].shape)
+
+    pcaObj = pca.PrincipalComponentAnalysis()
+    P, num_of_pcs = pcaObj.pca(np.array(X[:, :-1], dtype=float))
+
+    df = pd.DataFrame(P)
+    df.to_csv('./data/mfcc_specific_features_pca.csv')
 
 
 if __name__ == "__main__":

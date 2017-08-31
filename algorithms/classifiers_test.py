@@ -1,7 +1,7 @@
 import numpy as np
 import random as rd
 import pandas as pd
-import math
+from sklearn.cross_validation import train_test_split
 
 import algorithms.classification.MeanSquareErrorMinimizerLinearClassifier as linear
 import algorithms.classification.EnsembleLinearClassifier as ensemble
@@ -41,16 +41,21 @@ def run_LinearClassifier():
     print('query %s classified as "%s"\n' % (v_query, classification_output))
 
 
-def run_EnsembleClassifier():
+def create_EnsembleClassifier(k):
     print('****************************************************************')
     print('Ensemble - Linear Classifier')
     print('****************************************************************')
-    for k in range(100, 101):
-        print('num of linear classifiers:', k)
-        runner = run.RunAsBinaryClassifier()
-        classification_output = runner.runClassifier(ensemble.EnsembleLinearClassifier, nd_data, v_target, v_query, [],
-                                                     k)
-        print('query %s classified as "%s"\n' % (v_query, classification_output))
+    print('num of linear classifiers:', k)
+    runner = run.RunAsBinaryClassifier()
+    runner.createClassifiers(ensemble.EnsembleLinearClassifier, nd_data, v_target, [], k)
+
+    classification_output = []
+    for v_query in test_data:
+        classification_output.append(runner.runClassifiers(v_query))
+
+    print(classification_output)
+    df = pd.DataFrame(classification_output)
+    df.to_csv('../fma/data/final_data/ensembleClassifier_output.csv')
 
 
 def run_ExpectationMaximizationClassifier():
@@ -67,7 +72,7 @@ def run_ExpectationMaximizationClassifier():
 def get_random_data():
     X = (np.random.random_sample(10000) + np.random.random_sample(10000)).reshape(500, 20)
     T = [rd.randint(0, 2) for _ in range(500)]
-    Q = np.random.random_sample(35)
+    Q = np.random.random_sample(20)
     return X, T, Q
 
 
@@ -96,7 +101,7 @@ def get_audio_data(feature):
     #                   startRow=2,
     #                   startCol=1)
 
-    return data, target
+    return data, target.T[0]
 
 
 def get_final_data():
@@ -125,12 +130,43 @@ def get_final_data():
 
     return np.array(train_data_cleaned), np.array(train_targets_cleaned), np.array(test_data_cleaned), np.array(test_targets_cleaned)
 
+
+def get_original_audio_data(feature):
+    if feature == 'mfcc':
+        inputExcelFile = r"../fma/data/mfcc_pca_dataset.xlsx"
+        data = eo.readExcel(inputExcelFile)
+    elif feature == 'tonnetz':
+        inputExcelFile = r"../fma/data/tonnetz_pca_dataset.xlsx"
+        data = eo.readExcel(inputExcelFile)
+    else:
+        return None, None
+
+
+def get_mfcc_specific_features_data():
+    raw_data = pd.read_csv('../fma/data/mfcc_specific_features.csv', index_col=0).as_matrix()
+    pca_data = pd.read_csv('../fma/data/mfcc_specific_features_pca.csv', index_col=0).as_matrix()
+    T = raw_data[:, -1]
+    return pca_data, T
+
+
 if __name__ == "__main__":
     # nd_data, v_target, v_query = get_random_data()
-    # nd_data, v_target = get_audio_data('mfcc')
-    # v_target = v_target.T[0]
+    # test_data=[v_query]
+    # X, T = get_audio_data('mfcc')
+    X, T = get_mfcc_specific_features_data()
+    print(X.shape, T.shape)
 
-    nd_data, v_target, test_data, v_test_target = get_final_data()
+    X = np.column_stack((X, T))
+    train, test = train_test_split(X, test_size=0.3)
+
+    nd_data = train[:, :train.shape[1]-1]
+    v_target = train[:, train.shape[1]-1]
+    test_data = test[:, :test.shape[1]-1]
+    v_test_target = test[:, test.shape[1]-1]
+
+    # nd_data, v_target, test_data, v_test_target = get_final_data()
+
+    print(nd_data.shape, v_target.shape, test_data.shape, v_test_target.shape)
 
     print('data to classify:\n', nd_data.shape)
     print(nd_data)
@@ -138,8 +174,5 @@ if __name__ == "__main__":
     print('targets:\n', v_target.shape)
     print(v_target)
     print('----------------------------------------------------------------\n\n')
-    for v_query in test_data:
-        # run_KMeansClusteringClassifier()
-        # run_LinearClassifier()
-        run_EnsembleClassifier()
-        # run_ExpectationMaximizationClassifier()
+
+    create_EnsembleClassifier(5000)

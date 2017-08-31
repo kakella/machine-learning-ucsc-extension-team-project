@@ -5,22 +5,24 @@ import algorithms.util.keslerization as ks
 class RunAsBinaryClassifier:
 
     def __init__(self):
-        None
+        self.unique_classes = None
+        self.classifiers = []
 
     @staticmethod
     def getKeslerizedTarget(target, negative_value=-1):
         return ks.keslerize_column(target, negative_value)
 
-    @staticmethod
-    def runClassifier(classifierType, nd_data, v_target, v_query, paramsForClassifierInit, *paramsForClassifierTraining):
-        keslerized_columns, unique_classes = RunAsBinaryClassifier.getKeslerizedTarget(v_target)
+    def createClassifiers(self, classifierType, nd_data, v_target, paramsForClassifierInit, *paramsForClassifierTraining):
+        keslerized_columns, self.unique_classes = RunAsBinaryClassifier.getKeslerizedTarget(v_target)
 
-        classification_output = []
-        for k in range(len(unique_classes)):
+        for k in range(len(self.unique_classes)):
             column = keslerized_columns[:, k]
             classifier = classifierType(*paramsForClassifierInit)
             classifier.train(nd_data, column, *paramsForClassifierTraining)
-            classification_output.append(classifier.classify(v_query))
+            self.classifiers.append(classifier)
 
-        return ks.de_keslerize_columns(np.array([classification_output]), unique_classes)
-
+    def runClassifiers(self, v_query):
+        classification_output = []
+        for k in range(len(self.unique_classes)):
+            classification_output.append(self.classifiers[k].classify(v_query))
+        return ks.de_keslerize_columns(np.array([classification_output]), self.unique_classes)
