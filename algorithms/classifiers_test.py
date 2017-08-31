@@ -1,5 +1,7 @@
 import numpy as np
 import random as rd
+import pandas as pd
+import math
 
 import algorithms.classification.MeanSquareErrorMinimizerLinearClassifier as linear
 import algorithms.classification.EnsembleLinearClassifier as ensemble
@@ -43,7 +45,7 @@ def run_EnsembleClassifier():
     print('****************************************************************')
     print('Ensemble - Linear Classifier')
     print('****************************************************************')
-    for k in range(1000, 1001):
+    for k in range(100, 101):
         print('num of linear classifiers:', k)
         runner = run.RunAsBinaryClassifier()
         classification_output = runner.runClassifier(ensemble.EnsembleLinearClassifier, nd_data, v_target, v_query, [],
@@ -97,10 +99,38 @@ def get_audio_data(feature):
     return data, target
 
 
+def get_final_data():
+    train_data = pd.read_csv('../fma/data/final_data/training_pca.csv', index_col=0).as_matrix()[1:]
+    test_data = pd.read_csv('../fma/data/final_data/test_pca.csv', index_col=0).as_matrix()[1:]
+    train_targets = pd.read_csv('../fma/data/final_data/training_label.csv', index_col=0).as_matrix().T[0]
+    test_targets = pd.read_csv('../fma/data/final_data/test_label.csv', index_col=0).as_matrix().T[0]
+
+    print(train_data.shape, train_targets.shape, test_data.shape, test_targets.shape)
+
+    train_data_cleaned = []
+    train_targets_cleaned = []
+
+    for i in range(train_data.shape[0]):
+        if isinstance(train_targets[i], str):
+            train_data_cleaned.append(train_data[i])
+            train_targets_cleaned.append(train_targets[i])
+
+    test_data_cleaned = []
+    test_targets_cleaned = []
+
+    for i in range(test_data.shape[0]):
+        if isinstance(test_targets[i], str):
+            test_data_cleaned.append(test_data[i])
+            test_targets_cleaned.append(test_targets[i])
+
+    return np.array(train_data_cleaned), np.array(train_targets_cleaned), np.array(test_data_cleaned), np.array(test_targets_cleaned)
+
 if __name__ == "__main__":
     # nd_data, v_target, v_query = get_random_data()
-    nd_data, v_target = get_audio_data('mfcc')
-    v_target = v_target.T[0]
+    # nd_data, v_target = get_audio_data('mfcc')
+    # v_target = v_target.T[0]
+
+    nd_data, v_target, test_data, v_test_target = get_final_data()
 
     print('data to classify:\n', nd_data.shape)
     print(nd_data)
@@ -108,7 +138,8 @@ if __name__ == "__main__":
     print('targets:\n', v_target.shape)
     print(v_target)
     print('----------------------------------------------------------------\n\n')
-    # run_KMeansClusteringClassifier()
-    # run_LinearClassifier()
-    run_EnsembleClassifier()
-    # run_ExpectationMaximizationClassifier()
+    for v_query in test_data:
+        # run_KMeansClusteringClassifier()
+        # run_LinearClassifier()
+        run_EnsembleClassifier()
+        # run_ExpectationMaximizationClassifier()
