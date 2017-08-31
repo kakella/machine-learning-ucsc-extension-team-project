@@ -73,20 +73,57 @@ def clearAllMp3(dirNmae = None):
         os.remove(file)
 
 
+
+# EVERYTHING WITH "*" NEEDS TO BE FILLED/FINISHED
 def main():
     url = sys.argv[1]   # youtube video url
     audio_file = Downloader.download(url)
-    feature_file_name = os.path.splitext(audio_file)[0] + '.csv'
+    features_file_name = os.path.splitext(audio_file)[0] + '.csv'
     Extracter.extract(audio_file, feature_file_name)
 
-    ensembleClassifier = Ensemble.EnsembleLinearClassifier
-    linearClassifier   = Linear.MeanSquareErrorMinimizerLinearClassifier
-    emClassifier       = EM.ExpectationMaximizationClassifier
-    KMeansClassifier   = KMeans.KMeansClusteringClassifier
+    
+    # *LOAD TRAINING DATA
 
 
-    # Train all Classifiers
-    # Classify query using all classifiers
+    # CREATE CLASSIFIER OBJECTS
+    # *ensembleClassifier = Ensemble.EnsembleLinearClassifier()      
+    # *linearClassifier   = Linear.MeanSquareErrorMinimizerLinearClassifier()
+    # *emClassifier       = EM.ExpectationMaximizationClassifier()    
+    # *KMeansClassifier   = KMeans.KMeansClusteringClassifier()      
+
+
+    # TRAIN ALL CLASSIFIERS
+    print('Training Ensemble Classifier... ', end='')
+    # *ensembleClassifier.train()
+    print(' Done')
+
+    print('Training Linear Classifier... ', end='')
+    # *linearClassifier.train()
+    print(' Done')
+
+    print('Training EM Classifier... ', end='')
+    # *emClassifier.train()                      <--------- doesn't have train function
+    print(' Done')
+
+    print('Training KMeans Classifier... ', end='')
+    # *KMeansClassifier.train()
+    print(' Done')
+    
+
+    # CLASSIFY QUERY USING ALL CLASSIFIERS
+    print('\n\n')
+
+    print('Classifying using Ensemble Classifier... ')
+    # *ensembleClassifier.classify()
+
+    print('Classifying using Linear Classifier... ')
+    # *linearClassifier.classify()
+
+    print('Classifying using EM Classifier... ')
+    # *emClassifier.classify()                <------------ doesn't have classify function
+
+    print('Classifying using KMeans Classifier... ')
+    # *KMeansClassifier.classify()
 
 
 if __name__ == '__main__':
