@@ -14,6 +14,7 @@ import utils
 import argparse
 import code
 import scipy.linalg as linalg
+import sys
 
 FEATURES = ['chroma_stft', 'chroma_cqt', 'chroma_cens', 'tonnetz', 'mfcc', 'rmse', 'zcr', 'spectral_centroid', 'spectral_bandwidth', 'spectral_contrast', 'spectral_rolloff']
 LEVEL1 = FEATURES
@@ -125,7 +126,7 @@ class PCA:
         #P = np.dot(Z,V.T)[:,0:dim]
         V = np.flipud(V.T)
         P = np.dot(Z,V.T)
-        return (P, y)
+        return (P, V, y)
 
     def eigenLength(self, P):
         """
@@ -148,6 +149,7 @@ class PCA:
     def findGenrePrincipals(self, feature, size, genre1, genre2, level1, level2, plot, dump):
 
         if genre1 == "all" and genre2 == "all":
+            dims = []
             for i in range(0, len(GENRES)-1):
                 genre1 = GENRES[i]
                 for j in range(i+1, len(GENRES)):
@@ -155,17 +157,22 @@ class PCA:
                     print("\n[PCA:] \nlevel 1 feature:", level1, "\nlevel 2 feature:", level2)
                     print("[# Principal] Genre1:", genre1, "vs", "Genre2:", genre2)
                     X, y = self.GetTwoGenreFeatures(feature, size, genre1, genre2, level1, level2, dump)
-                    #code.interact(local=locals())
                     try:
-                        P, y = self.PCA(X, y)
+                        P, V, y = self.PCA(X, y)
                         dim, accuracy = self.findOptimalPrincipals(P, y)
+                        dims.append(dim)
                     except:
                         pass
+                    #code.interact(local=locals())
+
+            num_principal_average = np.mean(dims)
+            print("[Conclusion] Level 1:", level1, "Level 2:", level2, "\nAverage # of Principal Features is", num_principal_average)
         else:
             print("\n[PCA:] \nlevel 1 feature:", level1, "\nlevel 2 feature:", level2)
             print("[# Principal] Genre1:", genre1, "vs", "Genre2:", genre2)
             X, y = self.GetTwoGenreFeatures(feature, size, genre1, genre2, level1, level2, dump)
-            P, y = self.PCA(X, y)
+            P, V, y = self.PCA(X, y)
+            #code.interact(local=locals())
             dim, accuracy = self.findOptimalPrincipals(P, y)
             if plot:
                 X, y = self.getPCA(X, y)
