@@ -43,7 +43,7 @@ def run_EnsembleClassifier():
     print('****************************************************************')
     print('Ensemble - Linear Classifier')
     print('****************************************************************')
-    for k in range(100, 101):
+    for k in range(1000, 1001):
         print('num of linear classifiers:', k)
         runner = run.RunAsBinaryClassifier()
         classification_output = runner.runClassifier(ensemble.EnsembleLinearClassifier, nd_data, v_target, v_query, [],
@@ -65,7 +65,7 @@ def run_ExpectationMaximizationClassifier():
 def get_random_data():
     X = (np.random.random_sample(10000) + np.random.random_sample(10000)).reshape(500, 20)
     T = [rd.randint(0, 2) for _ in range(500)]
-    Q = np.random.random_sample(20)
+    Q = np.random.random_sample(35)
     return X, T, Q
 
 
@@ -100,6 +100,8 @@ def get_audio_data(feature):
 if __name__ == "__main__":
     # nd_data, v_target, v_query = get_random_data()
     nd_data, v_target = get_audio_data('mfcc')
+    v_target = v_target.T[0]
+
     print('data to classify:\n', nd_data.shape)
     print(nd_data)
     print('----------------------------------------------------------------\n\n')

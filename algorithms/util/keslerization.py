@@ -1,5 +1,5 @@
 import numpy as np
-
+import algorithms.util.constants as cst
 
 def keslerize_column(column_data, negative_value=-1):
     unique_values = sorted(set(column_data))
@@ -25,7 +25,7 @@ def de_keslerize_columns(keslerized_output_data, unique_values_sorted=None):
         index = d.tolist().index(max(d))
         count_positive_values = sum(x > 0 for x in d)
         if count_positive_values == 0 or count_positive_values > 1:
-            return_value.append('INDETERMINATE')
+            return_value.append(cst.INDETERMINATE_VALUE)
         else:
             if unique_values_sorted is None:
                 return_value.append(index)

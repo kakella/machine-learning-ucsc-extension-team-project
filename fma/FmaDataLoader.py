@@ -44,6 +44,20 @@ class FmaDataLoader:
 
         return X, y.values
 
+    def load_split_data(self):
+        small = self.tracks['set', 'subset'] <= 'small'
+
+        train = self.tracks['set', 'split'] == 'training'
+        val = self.tracks['set', 'split'] == 'validation'
+        test = self.tracks['set', 'split'] == 'test'
+
+        y_train = self.tracks.loc[small & train, ('track', 'genre_top')]
+        y_test = self.tracks.loc[small & test, ('track', 'genre_top')]
+        X_train = self.features.loc[small & train, 'mfcc']
+        X_test = self.features.loc[small & test, 'mfcc']
+
+        return X_train, y_train, X_test, y_test
+
 
 def main():
     fma = FmaDataLoader('./data')
