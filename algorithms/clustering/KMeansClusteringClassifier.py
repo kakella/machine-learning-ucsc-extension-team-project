@@ -1,13 +1,32 @@
+#!/usr/bin/env python3
+
 import numpy as np
 import algorithms.util.misc as ut
+import matplotlib.pyplot as plt
 
 
 class KMeansClusteringClassifier:
 
-    def __init__(self, stop_threshold=None, n_iterations=None):
+    def __init__(self, X, C=2, stop_threshold=None, n_iterations=None):
         self.stop_threshold = stop_threshold or 0.1
         self.n_iterations = n_iterations or 10000
         self.classifier = None
+        self.X = X                      # N x d features
+        self.N = X.shape[0]             # data samples
+        self.d = X.shape[1]             # feature vectors
+        self.C = C                      # guassian mixture components
+
+        self.a = np.zeros(self.C)                       # component weight
+        self.u = np.zeros((self.C,self.d))              # mean
+        self.S = np.zeros((self.C,self.d,self.d))       # covariance
+        self.P = np.zeros((self.N,self.C))              # posterior probabilities
+        
+        for k in range(self.C):
+            self.a[k] = 1/self.C
+            self.u[k] = np.random.rand(self.d)
+            for i in range(self.d):
+                self.u[k][i] *= (max(X[:,i])-min(X[:,i])) - abs(min(X[:,i]))
+            self.S[k] = np.cov(X, rowvar=False)
 
     @staticmethod
     def __init_means(nd_data, k):
@@ -49,12 +68,16 @@ class KMeansClusteringClassifier:
             delta += sum(mean)
         return delta
 
-    def train(self, nd_data, k):
+    def train(self, k, plot=False):
+        nd_data = self.X
         nd_means = KMeansClusteringClassifier.__init_means(nd_data, k)
         recalculated_means = None
 
         means_tracker = nd_means
         iteration_tracker = 0
+        red = 0x00
+        green = 0xff
+        blue = 0x00
 
         for i in range(1, self.n_iterations):
             iteration_tracker += 1
@@ -63,10 +86,22 @@ class KMeansClusteringClassifier:
             recalculated_means = KMeansClusteringClassifier.__recalculate_means(nd_data, nd_closest_means, k)
             means_delta = float(KMeansClusteringClassifier.__calculate_means_delta(nd_means, recalculated_means))
 
+            if plot:
+                print( means_delta )
+                plt.plot(self.u[:,0], self.u[:,1], linestyle='--',color="#%02x%02x%02x"%(red,green,blue))
+                red += 0x5
+                red %= 0xff
+                green -= 0x5
+                if green < 0:
+                    green = 0xff
+                plt.pause(0.1)
+
             if means_delta <= self.stop_threshold:
+                plt.plot(self.u[:,0], self.u[:,1], linestyle='-', linewidth=4, color="#%02x%02x%02x"%(red,green,blue))
                 break
             else:
                 nd_means = recalculated_means
+                self.u = nd_means
                 means_tracker = np.concatenate((means_tracker, nd_means))
 
         self.classifier = recalculated_means
