@@ -220,6 +220,8 @@ def load(filepath):
 
         return tracks
 
+    query = pd.read_csv(filepath, header=None)
+    return query
 
 def get_audio_path(audio_dir, track_id):
     tid_str = '{:06d}'.format(track_id)
