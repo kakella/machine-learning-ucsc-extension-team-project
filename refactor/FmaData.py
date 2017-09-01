@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import sys
 import utils
 
 
@@ -23,6 +23,13 @@ class FmaData:
         np.testing.assert_array_equal(self.features.index, self.tracks.index)
         assert self.echonest.index.isin(self.tracks.index).all()
 
+    def LoadQuery(self, csv, feature="mfcc"):
+        self.query = utils.load("featureFiles/" + csv)
+
+        f = self.query[0] == feature
+        self.query = self.query.loc[f]
+        return self.query[3].values
+        
     def GetFeatures(self):
         return self.features
 
@@ -48,5 +55,5 @@ class FmaData:
         X = self.features.loc[small & (genre1 | genre2), feature]
         y = self.tracks.loc[small & (genre1 | genre2), ('track', 'genre_top')]
 
-        return (X, y.values)
+        return (X.values, y.values)
 

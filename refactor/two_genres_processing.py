@@ -24,6 +24,7 @@ import argparse
 import FmaData
 import Plotter
 import algorithms.clustering.ExpectationMaximizationClassifier
+import algorithms.clustering.KMeansClusteringClassifier
 
 script_name = "main"
 
@@ -95,6 +96,11 @@ def main():
         em = algorithms.clustering.ExpectationMaximizationClassifier.ExpectationMaximizationClassifier(X, 2)
         em.Run(iterations=10000, tolerance=10**-3, print_progress=True, plot=args.plot)
 
+    elif args.algorithm == "KMeans":
+        km = algorithms.clustering.KMeansClusteringClassifier.KMeansClusteringClassifier(X)
+        km.train(2, True)
+        
+        
     ### ADD Additional Algorithms here ###
 
 

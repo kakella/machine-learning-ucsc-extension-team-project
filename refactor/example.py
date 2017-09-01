@@ -65,6 +65,13 @@ class FMA:
         print("Close graph to continue")
         plt.show()
 
+    def GetTrainingData(self):
+        small   = self.tracks['set', 'subset'] <= 'small'
+        train   = self.tracks['set', 'split'] == 'training'
+        y_train = self.tracks.loc[small & train, ('track', 'genre_top')]
+        X_train = self.features.loc[small & train, 'mfcc']
+        return X_train,y_train
+         
     def RunExampleGenreClassification(self):
         """Example Genre classification from features."""
 

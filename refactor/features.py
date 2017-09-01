@@ -186,7 +186,6 @@ def compute_features_bryce(filepath):
 
 def extract(filepath, saveName):
     features = compute_features_bryce(filepath)
-    print (features)
     save(features, 10, saveName)
 #    test(features, 10)
 
