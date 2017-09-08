@@ -15,13 +15,13 @@ class FmaData:
         plt.rcParams['figure.figsize'] = (17, 5)
 
         # Load metadata and features.
-        self.tracks   = utils.load("fma_metadata/tracks.csv")
-        self.genres   = utils.load("fma_metadata/genres.csv")
-        self.features = utils.load("fma_metadata/features.csv")
-        self.echonest = utils.load("fma_metadata/echonest.csv")
+        self.tracks   = utils.load("../fma/data/tracks.csv")
+        self.genres   = utils.load("../fma/data/genres.csv")
+        self.features = utils.load("../fma/data/features.csv")
+        # self.echonest = utils.load("fma_metadata/echonest.csv")
 
         np.testing.assert_array_equal(self.features.index, self.tracks.index)
-        assert self.echonest.index.isin(self.tracks.index).all()
+        # assert self.echonest.index.isin(self.tracks.index).all()
 
     def LoadQuery(self, csv, feature="mfcc"):
         self.query = utils.load("featureFiles/" + csv)

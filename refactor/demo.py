@@ -94,7 +94,7 @@ def main():
     
     Extracter.extract(audio_file, features_file_name)
 
-    fma =  FmaData.FmaData()
+    fma = FmaData.FmaData()
     script_name = 'demo.py'
     print("[%s] Loading Metadata..." % script_name)
     fma.LoadMetadata()
