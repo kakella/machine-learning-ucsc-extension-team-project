@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
-import utils
+import fma.utils as utils
 
 
 class FmaData:

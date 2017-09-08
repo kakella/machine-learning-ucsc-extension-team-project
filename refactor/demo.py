@@ -8,8 +8,8 @@ import algorithms.classification.MeanSquareErrorMinimizerLinearClassifier as lin
 import algorithms.classification.EnsembleLinearClassifier as ensemble
 import algorithms.clustering.KMeansClusteringClassifier as kMeans
 import algorithms.clustering.ExpectationMaximizationClassifier as EM
-import features
-import FmaData
+import refactor.features as features
+import refactor.FmaData as FmaData
 import scipy.linalg as linalg
 import pandas as pd
 

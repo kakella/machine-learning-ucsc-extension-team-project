@@ -19,7 +19,7 @@ from scipy import stats
 import pandas as pd
 import librosa
 from tqdm import tqdm
-import utils
+import fma.utils as utils
 
 
 
