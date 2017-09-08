@@ -30,8 +30,10 @@ class PerformanceMetricsCalculator:
 
     @staticmethod
     def evaluate_binary_classifier(v_truth, v_result, positive_class_label, negative_class_label):
-        TP = TN = FP = FN = 0
+        TP = TN = FP = FN = INDETERMINATE = 0
         for i, r in enumerate(v_result):
+            if r == cst.INDETERMINATE_VALUE:
+                INDETERMINATE += 1
             if r == v_truth[i]:
                 if r == positive_class_label:
                     TP += 1
@@ -46,7 +48,8 @@ class PerformanceMetricsCalculator:
             'TP': TP,
             'TN': TN,
             'FP': FP,
-            'FN': FN
+            'FN': FN,
+            'INDETERMINATE': INDETERMINATE
         }
 
 

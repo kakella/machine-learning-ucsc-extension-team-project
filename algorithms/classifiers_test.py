@@ -11,6 +11,7 @@ import algorithms.clustering.KMeansClusteringClassifier as kMeans
 import algorithms.clustering.ExpectationMaximizationClassifier as expMax
 
 import algorithms.util.RunAsBinaryClassifier as run
+import algorithms.util.PerformanceMetricsCalculator as perf
 
 # import fma.FmaDataLoader as fma
 import fma.excel_operations as eo
@@ -42,11 +43,11 @@ def run_LinearClassifier():
     print('query %s classified as "%s"\n' % (v_query, classification_output))
 
 
-def create_EnsembleClassifier(k):
-    print('****************************************************************')
-    print('Ensemble - Linear Classifier')
-    print('****************************************************************')
-    print('num of linear classifiers:', k)
+def create_EnsembleClassifier(k, suffix=None):
+    # print('****************************************************************')
+    # print('Ensemble - Linear Classifier')
+    # print('****************************************************************')
+    # print('num of linear classifiers:', k)
     runner = run.RunAsBinaryClassifier()
     runner.createClassifiers(ensemble.EnsembleLinearClassifier, nd_data, v_target, [], k)
 
@@ -54,9 +55,11 @@ def create_EnsembleClassifier(k):
     for v_query in test_data:
         classification_output.append(runner.runClassifiers(v_query))
 
-    print(classification_output)
+    # print(classification_output)
     df = pd.DataFrame(classification_output)
-    df.to_csv('../fma/data/final_data/ensembleClassifier_output.csv')
+    df.to_csv('../fma/data/final_data/two_genres/ensembleClassifier_output'+suffix+'.csv')
+
+    return np.array(classification_output)
 
 
 def run_ExpectationMaximizationClassifier():
@@ -150,6 +153,17 @@ def get_mfcc_specific_features_data():
     return pca_data, T
 
 
+def split_data_by_genre(data):
+    genre_data = {genre: [] for genre in set(data[:, -1])}
+    [genre_data[row[-1]].append(row) for row in data]
+    return genre_data
+
+
+def calculate_accuracy(v_prediction, v_truth, genre1, genre2):
+    pmc = perf.PerformanceMetricsCalculator()
+    return pmc.evaluate_binary_classifier(v_truth, v_prediction, genre1, genre2)
+
+
 if __name__ == "__main__":
     # nd_data, v_target, v_query = get_random_data()
     # test_data=[v_query]
@@ -158,22 +172,51 @@ if __name__ == "__main__":
     print(X.shape, T.shape)
 
     X = np.column_stack((X, T))
-    train, test = train_test_split(X, test_size=0.3)
+    d_genre_data = split_data_by_genre(X)
 
-    nd_data = train[:, :train.shape[1]-1]
-    v_target = train[:, train.shape[1]-1]
-    test_data = test[:, :test.shape[1]-1]
-    v_test_target = test[:, test.shape[1]-1]
+    performance_metrics = []
 
-    # nd_data, v_target, test_data, v_test_target = get_final_data()
+    for genre1 in d_genre_data.items():
+        for genre2 in d_genre_data.items():
+            if genre1[0] == genre2[0]:
+                continue
+            genre1_data = np.array(genre1[1])
+            genre2_data = np.array(genre2[1])
 
-    print(nd_data.shape, v_target.shape, test_data.shape, v_test_target.shape)
+            X = np.concatenate((genre1_data, genre2_data), axis=0)
+            np.random.shuffle(X)
+            train, test = train_test_split(X, test_size=0.3)
+            nd_data = train[:, :train.shape[1]-1]
+            v_target = train[:, train.shape[1]-1]
+            test_data = test[:, :test.shape[1]-1]
+            v_test_target = test[:, test.shape[1]-1]
 
-    print('data to classify:\n', nd_data.shape)
-    print(nd_data)
-    print('----------------------------------------------------------------\n\n')
-    print('targets:\n', v_target.shape)
-    print(v_target)
-    print('----------------------------------------------------------------\n\n')
+            classification_output = create_EnsembleClassifier(2000, '_'+genre1[0]+'_'+genre2[0]).flatten()
+            accuracy = calculate_accuracy(classification_output, v_test_target, genre1[0], genre2[0])
+            performance_metrics.append([genre1[0], genre2[0], accuracy['TP'], accuracy['TN'], accuracy['FP'], accuracy['FN'], accuracy['INDETERMINATE'], (accuracy['TP'] + accuracy['TN']) / test_data.shape[0]])
 
-    create_EnsembleClassifier(5000)
+    df = pd.DataFrame(performance_metrics)
+    df.to_csv('../fma/data/final_data/two_genres/performance_metrics.csv')
+
+
+
+
+    # train, test = train_test_split(X, test_size=0.3)
+    #
+    # nd_data = train[:, :train.shape[1]-1]
+    # v_target = train[:, train.shape[1]-1]
+    # test_data = test[:, :test.shape[1]-1]
+    # v_test_target = test[:, test.shape[1]-1]
+    #
+    # # nd_data, v_target, test_data, v_test_target = get_final_data()
+    #
+    # print(nd_data.shape, v_target.shape, test_data.shape, v_test_target.shape)
+    #
+    # print('data to classify:\n', nd_data.shape)
+    # print(nd_data)
+    # print('----------------------------------------------------------------\n\n')
+    # print('targets:\n', v_target.shape)
+    # print(v_target)
+    # print('----------------------------------------------------------------\n\n')
+    #
+    # create_EnsembleClassifier(5000)
