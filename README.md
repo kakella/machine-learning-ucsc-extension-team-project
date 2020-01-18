@@ -7,5 +7,4 @@ This is the team project for Team Bengio. We try to build classifiers for genre 
 * Marvin Corro
 * Bryce Edwards
 * Albert Azali
-* Sahil Faruque
 * Ksheerasagar Akella
